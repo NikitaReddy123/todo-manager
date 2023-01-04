@@ -71,15 +71,16 @@ describe("Todo Application", function () {
     expect(parsedResponse[3]["title"]).toBe("Buy ps3");
   });
 
-  test("Deletes a todo", async () => {
-    const res = await agent.post("/todos").send({
-      title: "My Todo",
+  test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+    const response = await agent.post("/todos").send({
+      title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
     });
-    const parsedJSONResponse = JSON.parse(res.text);
-    const todoID = parsedJSONResponse.id;
-    const deleteRes = await agent.delete(`/todos/${todoID}`).send();
-    expect(deleteRes.text).toBe("true");
+    const parsedResponse = JSON.parse(response.text);
+    const todoID = parsedResponse.id;
+
+    const deleteResponse = await agent.delete(`/todos/${todoID}`);
+    expect(deleteResponse.text).toBe("true");
   });
 });
